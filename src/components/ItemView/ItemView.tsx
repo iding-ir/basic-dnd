@@ -54,7 +54,13 @@ export const ItemView = ({ item }: { item: Item }) => {
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
-      onPointerCancel={() => console.log("onPointerCancel", item.name)}
+      onPointerCancel={() => {
+        console.log("onPointerCancel", item.name);
+
+        // 6.
+        // Still doesn't work in touch, because event is canceled
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/pointercancel_event
+      }}
       onPointerOut={() => console.log("onPointerOut", item.name)}
       onPointerLeave={() => console.log("onPointerLeave", item.name)}
     >
