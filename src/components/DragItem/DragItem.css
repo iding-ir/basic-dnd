@@ -1,0 +1,13 @@
+.drag-item {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background-color: yellow;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  pointer-events: none;
+  touch-action: none;
+}
