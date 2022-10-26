@@ -26,6 +26,11 @@ export const ItemView = ({ item }: { item: Item }) => {
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerDown", item.name);
 
+    // Tested it on:
+    // Chrome desktop: works fine
+    // Chrome desktop touch simulation: works fine
+    // Chrome on android: dragging works fine, but now I cannot scroll.
+    // Makes sense. Need to prevent default only when dragging is in progress
     const coords: Coords = { x: event.clientX, y: event.clientY };
     document.body.addEventListener("pointermove", bodyPointerMove);
     document.body.addEventListener("pointerup", bodyPointerUp);
