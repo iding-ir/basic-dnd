@@ -53,6 +53,11 @@ export const ItemView = ({
     // Chrome desktop touch simulation: works fine
     // Chrome on android: dragging works fine, but now I cannot scroll.
     // Makes sense. Need to prevent default only when dragging is in progress
+
+    // 14.
+    // Cool, but now the question is: how do we scroll in touch devices?
+    // Because when you think about it, touch to scroll can always be confused with touch to drag-and-drop.
+    // Solution: use long press to activate drag-and-drop in touch devices
     const coords: Coords = { x: event.clientX, y: event.clientY };
     document.body.addEventListener("pointermove", bodyPointerMove);
     document.body.addEventListener("pointerup", bodyPointerUp);
