@@ -83,6 +83,8 @@ export const ItemView = ({
       setDragSource(item);
 
       itemsViewRef.current?.addEventListener("touchmove", preventDefault);
+
+      cancelLongPress();
     }, LONG_PRESS_TIMEOUT);
   };
 
