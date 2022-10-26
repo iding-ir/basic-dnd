@@ -18,12 +18,7 @@ const items: Item[] = [
 
 export const App = () => {
   return (
-    <div
-      className="app"
-      onPointerMove={(event) => {
-        event.preventDefault();
-      }}
-    >
+    <div className="app">
       <ItemsView items={items} />
 
       <DragItem />

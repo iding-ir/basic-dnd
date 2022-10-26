@@ -57,13 +57,11 @@ export const ItemView = ({ item }: { item: Item }) => {
       onPointerCancel={() => {
         console.log("onPointerCancel", item.name);
 
-        // 6.
-        // Still doesn't work in touch, because event is canceled
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/pointercancel_event
-
-        // 9.
-        // It's start of scrolling in touch devices that cancels the event.
-        // Need to prevent default behavior.
+        // 10.
+        // Preventing default by JavaScript didn't work.
+        // event.preventDefault() didn't work.
+        // event.nativeEvent.preventDefault() didn't work.
+        // They didn't work on either "touchmove" nor "pointermove"
       }}
       onPointerOut={() => console.log("onPointerOut", item.name)}
       onPointerLeave={() => console.log("onPointerLeave", item.name)}
