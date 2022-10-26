@@ -1,7 +1,8 @@
 import { useRef, RefObject } from "react";
-import { Coords, Item } from "../App/App";
-import { useDragItem } from "../DragItem/DragItem";
-import { useDragData } from "../ItemsView/ItemsView";
+import { LONG_PRESS_TIMEOUT } from "../../constants/constants";
+import { useDragData } from "../../hooks/useDragData/useDragData";
+import { useDragItem } from "../../hooks/useDragItem/useDragItem";
+import { Coords, Item } from "../../types/types";
 import "./ItemView.css";
 
 export const ItemView = ({
@@ -78,7 +79,7 @@ export const ItemView = ({
       setDragSource(item);
 
       itemsViewRef.current?.addEventListener("touchmove", preventDefault);
-    }, 1000);
+    }, LONG_PRESS_TIMEOUT);
   };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {

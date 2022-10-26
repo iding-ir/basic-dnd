@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./components/App/App";
-import { DragItemProvider } from "./components/DragItem/DragItem";
+import { DragItemProvider } from "./hooks/useDragItem/useDragItem";
 import "./index.css";
 
 const root = ReactDOM.createRoot(
