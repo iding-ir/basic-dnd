@@ -73,13 +73,16 @@ export const ItemView = ({
       const coords: Coords = { x: event.clientX, y: event.clientY };
       setDragItem(item);
       setDragItemCoords(coords);
+
+      // 20.
+      // Moved it here, because still could not scroll in touch devices.
+      // Makes sense, we should disable scroll only after long press, not immediately after 'pointerdown'
+      itemsViewRef.current?.addEventListener("touchmove", preventDefault);
     }, 1000);
   };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerDown", item.name);
-
-    itemsViewRef.current?.addEventListener("touchmove", preventDefault);
 
     waitForLongPress(event);
   };
