@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { useRef, RefObject } from "react";
 import { Coords, Item } from "../App/App";
 import { useDragItem } from "../DragItem/DragItem";
 import "./ItemView.css";
@@ -11,6 +11,8 @@ export const ItemView = ({
   itemsViewRef: RefObject<HTMLDivElement>;
 }) => {
   const { setDragItem, setDragItemCoords } = useDragItem();
+  const elementRef = useRef<HTMLDivElement>(null);
+  let longPressTimer: NodeJS.Timer;
 
   const preventDefault = (event: Event) => {
     console.log("preventDefault");
@@ -40,6 +42,45 @@ export const ItemView = ({
     setDragItemCoords(undefined);
   };
 
+  const cancelLongPress = () => {
+    console.log("cancelLongPress");
+
+    // 16.
+    // User has moved, or released pointer too early, or their device has changed orientation.
+    // We kill the long press timeout.
+    longPressTimer && clearTimeout(longPressTimer);
+
+    // 17.
+    // Terminate event listener garbage
+    elementRef.current?.removeEventListener("pointerup", cancelLongPress);
+    elementRef.current?.removeEventListener("pointermove", cancelLongPress);
+    elementRef.current?.removeEventListener("pointercancel", cancelLongPress);
+  };
+
+  const addLongPressCancelers = () => {
+    console.log("addLongPressCancelers");
+
+    // 15.
+    // Three events can cancel a long press: up, move, and cancel
+    // We add them to our element so we can clear the long press timeout if one of them happens.
+    elementRef.current?.addEventListener("pointerup", cancelLongPress);
+    elementRef.current?.addEventListener("pointermove", cancelLongPress);
+    elementRef.current?.addEventListener("pointercancel", cancelLongPress);
+  };
+
+  const waitForLongPress = () => {
+    addLongPressCancelers();
+
+    longPressTimer = setTimeout(() => {
+      console.log("User has long pressed!");
+
+      // 18.
+      // Only add certain event listeners after long press
+      document.body.addEventListener("pointermove", bodyPointerMove);
+      document.body.addEventListener("pointerup", bodyPointerUp);
+    }, 1000);
+  };
+
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerDown", item.name);
 
@@ -59,8 +100,8 @@ export const ItemView = ({
     // Because when you think about it, touch to scroll can always be confused with touch to drag-and-drop.
     // Solution: use long press to activate drag-and-drop in touch devices
     const coords: Coords = { x: event.clientX, y: event.clientY };
-    document.body.addEventListener("pointermove", bodyPointerMove);
-    document.body.addEventListener("pointerup", bodyPointerUp);
+
+    waitForLongPress();
 
     setDragItem(item);
     setDragItemCoords(coords);
@@ -77,6 +118,7 @@ export const ItemView = ({
   return (
     <div
       className="item-view"
+      ref={elementRef}
       onPointerOver={() => console.log("onPointerOver", item.name)}
       onPointerEnter={() => console.log("onPointerEnter", item.name)}
       onPointerDown={onPointerDown}
