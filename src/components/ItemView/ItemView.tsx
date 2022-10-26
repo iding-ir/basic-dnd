@@ -60,6 +60,10 @@ export const ItemView = ({ item }: { item: Item }) => {
         // 6.
         // Still doesn't work in touch, because event is canceled
         // https://developer.mozilla.org/en-US/docs/Web/API/Element/pointercancel_event
+
+        // 9.
+        // It's start of scrolling in touch devices that cancels the event.
+        // Need to prevent default behavior.
       }}
       onPointerOut={() => console.log("onPointerOut", item.name)}
       onPointerLeave={() => console.log("onPointerLeave", item.name)}
