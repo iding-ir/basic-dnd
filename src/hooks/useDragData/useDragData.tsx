@@ -8,6 +8,8 @@ import {
 import { Item } from "../../types/types";
 
 interface IDragDataContext {
+  isDragAndDropInProgress: boolean;
+  setIsDragAndDropInProgress: Dispatch<React.SetStateAction<boolean>>;
   dragSource?: Item;
   setDragSource: Dispatch<React.SetStateAction<Item | undefined>>;
   dragOver?: Item;
@@ -21,9 +23,22 @@ const DragDataContext = createContext<IDragDataContext>({} as IDragDataContext);
 export const useDragData = () => useContext(DragDataContext);
 
 export const DragDataProvider = ({ children }: { children: JSX.Element }) => {
+  const [isDragAndDropInProgress, setIsDragAndDropInProgress] = useState(false);
   const [dragSource, setDragSource] = useState<Item>();
   const [dragOver, setDragOver] = useState<Item>();
   const [dragDestination, setDragDestination] = useState<Item>();
+
+  useEffect(() => {
+    setIsDragAndDropInProgress(!!dragSource);
+  }, [dragSource]);
+
+  useEffect(() => {
+    if (!isDragAndDropInProgress) {
+      setDragSource(undefined);
+      setDragOver(undefined);
+      setDragDestination(undefined);
+    }
+  }, [isDragAndDropInProgress]);
 
   useEffect(() => {
     if (dragSource) {
@@ -37,24 +52,13 @@ export const DragDataProvider = ({ children }: { children: JSX.Element }) => {
     if (dragDestination) {
       console.log("---- Dropped on:", dragDestination.name);
     }
-
-    if (dragSource && dragOver && dragDestination) {
-      console.log(
-        "---- Resetting",
-        dragSource.name,
-        dragOver.name,
-        dragDestination.name
-      );
-
-      setDragSource(undefined);
-      setDragOver(undefined);
-      setDragDestination(undefined);
-    }
   }, [dragSource, dragOver, dragDestination]);
 
   return (
     <DragDataContext.Provider
       value={{
+        isDragAndDropInProgress,
+        setIsDragAndDropInProgress,
         dragSource,
         setDragSource,
         dragOver,

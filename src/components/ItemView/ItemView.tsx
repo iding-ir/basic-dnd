@@ -14,7 +14,13 @@ export const ItemView = ({
 }) => {
   const { setDragItem, setDragItemCoords } = useDragItem();
   const elementRef = useRef<HTMLDivElement>(null);
-  const { setDragSource, setDragOver, setDragDestination } = useDragData();
+  const {
+    isDragAndDropInProgress,
+    setIsDragAndDropInProgress,
+    setDragSource,
+    setDragOver,
+    setDragDestination,
+  } = useDragData();
   let longPressTimer: NodeJS.Timer;
 
   const preventDefault = (event: Event) => {
@@ -41,6 +47,7 @@ export const ItemView = ({
 
     setDragItem(undefined);
     setDragItemCoords(undefined);
+    setIsDragAndDropInProgress(false);
   };
 
   const cancelLongPress = () => {
@@ -93,7 +100,7 @@ export const ItemView = ({
     // We're setting dragOver by simply moving pointer on an item, even before drag-and-drop starts.
     // We can do "dragSource && setDragOver(item)" or add a "isDragAndDropInProgress".
     // I'm going with the later.
-    setDragOver(item);
+    isDragAndDropInProgress && setDragOver(item);
   };
 
   const onPointerUp = () => {
