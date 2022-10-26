@@ -1,6 +1,7 @@
 import { useRef, RefObject } from "react";
 import { Coords, Item } from "../App/App";
 import { useDragItem } from "../DragItem/DragItem";
+import { useDragData } from "../ItemsView/ItemsView";
 import "./ItemView.css";
 
 export const ItemView = ({
@@ -12,6 +13,7 @@ export const ItemView = ({
 }) => {
   const { setDragItem, setDragItemCoords } = useDragItem();
   const elementRef = useRef<HTMLDivElement>(null);
+  const { setDragSource, setDragOver, setDragDestination } = useDragData();
   let longPressTimer: NodeJS.Timer;
 
   const preventDefault = (event: Event) => {
@@ -38,6 +40,9 @@ export const ItemView = ({
 
     setDragItem(undefined);
     setDragItemCoords(undefined);
+    setDragSource(undefined);
+    setDragOver(undefined);
+    setDragDestination(undefined);
   };
 
   const cancelLongPress = () => {
@@ -67,16 +72,11 @@ export const ItemView = ({
       document.body.addEventListener("pointermove", bodyPointerMove);
       document.body.addEventListener("pointerup", bodyPointerUp);
 
-      // 19.
-      // We also need to set DragItem after long press is triggered.
-      // But we don't 'event' here, so I passed it as a parameter.
       const coords: Coords = { x: event.clientX, y: event.clientY };
       setDragItem(item);
       setDragItemCoords(coords);
+      setDragSource(item);
 
-      // 20.
-      // Moved it here, because still could not scroll in touch devices.
-      // Makes sense, we should disable scroll only after long press, not immediately after 'pointerdown'
       itemsViewRef.current?.addEventListener("touchmove", preventDefault);
     }, 1000);
   };
@@ -89,10 +89,14 @@ export const ItemView = ({
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerMove", item.name);
+
+    setDragOver(item);
   };
 
   const onPointerUp = () => {
     console.log("onPointerUp", item.name);
+
+    setDragDestination(item);
   };
 
   return (

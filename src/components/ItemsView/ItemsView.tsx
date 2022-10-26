@@ -1,4 +1,11 @@
-import { useRef, createContext, useContext, useState, Dispatch } from "react";
+import {
+  useEffect,
+  useRef,
+  createContext,
+  useContext,
+  useState,
+  Dispatch,
+} from "react";
 import { Item } from "../App/App";
 import { ItemView } from "../ItemView/ItemView";
 import "./ItemsView.css";
@@ -43,6 +50,23 @@ export const DragDataProvider = ({ children }: { children: JSX.Element }) => {
   const [dragSource, setDragSource] = useState<Item>();
   const [dragOver, setDragOver] = useState<Item>();
   const [dragDestination, setDragDestination] = useState<Item>();
+
+  // 22.
+  // Should work, but it doesn't.
+  // When dragging is in progress, logs are not as expected.
+  useEffect(() => {
+    if (dragSource) {
+      console.log("Started dragging:", dragSource.name);
+    }
+
+    if (dragOver) {
+      console.log("Dragging over:", dragOver.name);
+    }
+
+    if (dragDestination) {
+      console.log("Dropped on:", dragDestination.name);
+    }
+  }, [dragSource, dragOver, dragDestination]);
 
   return (
     <DragDataContext.Provider
