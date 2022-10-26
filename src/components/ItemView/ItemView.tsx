@@ -93,9 +93,6 @@ export const ItemView = ({
 
     waitForLongPress(event);
 
-    // 31.
-    // Bugfix for touch devices
-    // https://stackoverflow.com/questions/71324712/pointer-events-vs-touch-and-mouse-events
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -110,8 +107,6 @@ export const ItemView = ({
   const onPointerUp = () => {
     console.log("onPointerUp", item.name);
 
-    // 30.
-    // Bugfix: a fast click should not set drag destination
     isDragAndDropInProgress && setDragDestination(item);
   };
 

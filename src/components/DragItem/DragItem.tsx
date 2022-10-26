@@ -9,9 +9,6 @@ export const DragItem = () => {
     left: `${dragItemCoords.x}px`,
   };
 
-  // 26.
-  // Showing DragItem breaks functionality
-  // Checking console logs help understand the problem.
   return dragItem
     ? createPortal(
         <div className="drag-item" style={style}>
