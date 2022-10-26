@@ -41,9 +41,6 @@ export const ItemView = ({
 
     setDragItem(undefined);
     setDragItemCoords(undefined);
-    setDragSource(undefined);
-    setDragOver(undefined);
-    setDragDestination(undefined);
   };
 
   const cancelLongPress = () => {
@@ -100,20 +97,32 @@ export const ItemView = ({
     setDragDestination(item);
   };
 
+  const onPointerOverEnter = () => {
+    console.log("onPointerOverEnter", item.name);
+  };
+
+  const onPointerOutLeave = () => {
+    console.log("onPointerOutLeave", item.name);
+
+    setDragOver(undefined);
+  };
+
+  const onPointerCancel = () => {
+    console.log("onPointerCancel", item.name);
+  };
+
   return (
     <div
       className="item-view"
       ref={elementRef}
-      onPointerOver={() => console.log("onPointerOver", item.name)}
-      onPointerEnter={() => console.log("onPointerEnter", item.name)}
+      onPointerOver={onPointerOverEnter}
+      onPointerEnter={onPointerOverEnter}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
-      onPointerCancel={() => {
-        console.log("onPointerCancel", item.name);
-      }}
-      onPointerOut={() => console.log("onPointerOut", item.name)}
-      onPointerLeave={() => console.log("onPointerLeave", item.name)}
+      onPointerCancel={onPointerCancel}
+      onPointerOut={onPointerOutLeave}
+      onPointerLeave={onPointerOutLeave}
     >
       {item.name}
     </div>

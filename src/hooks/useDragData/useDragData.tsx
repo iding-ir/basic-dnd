@@ -26,18 +26,29 @@ export const DragDataProvider = ({ children }: { children: JSX.Element }) => {
   const [dragDestination, setDragDestination] = useState<Item>();
 
   useEffect(() => {
-    console.log(dragSource, dragOver, dragDestination);
-
     if (dragSource) {
-      console.log("Started dragging:", dragSource.name);
+      console.log("---- Started dragging:", dragSource.name);
     }
 
     if (dragOver) {
-      console.log("Dragging over:", dragOver.name);
+      console.log("---- Dragging over:", dragOver.name);
     }
 
     if (dragDestination) {
-      console.log("Dropped on:", dragDestination.name);
+      console.log("---- Dropped on:", dragDestination.name);
+    }
+
+    if (dragSource && dragOver && dragDestination) {
+      console.log(
+        "---- Resetting",
+        dragSource.name,
+        dragOver.name,
+        dragDestination.name
+      );
+
+      setDragSource(undefined);
+      setDragOver(undefined);
+      setDragDestination(undefined);
     }
   }, [dragSource, dragOver, dragDestination]);
 
