@@ -2,8 +2,6 @@
   height: 300%;
   padding: 1rem;
   background-color: red;
-  /* 11. */
-  /* Not the most elegant solution, but it works for now */
   /* TODO: Find a better way to prevent scrolling. it cancels event in touch devices */
   touch-action: none;
 }

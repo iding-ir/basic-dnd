@@ -16,11 +16,9 @@ export const ItemView = ({ item }: { item: Item }) => {
   const bodyPointerUp = (event: PointerEvent) => {
     console.log("bodyPointerUp");
 
-    // 5.
-    // Remove all body event listeners with body "pointerup"
     document.body.removeEventListener("pointermove", bodyPointerMove);
     document.body.removeEventListener("pointerup", bodyPointerUp);
-    // Also get unset DragItem
+
     setDragItem(undefined);
     setDragItemCoords(undefined);
   };
@@ -30,8 +28,6 @@ export const ItemView = ({ item }: { item: Item }) => {
 
     const coords: Coords = { x: event.clientX, y: event.clientY };
     document.body.addEventListener("pointermove", bodyPointerMove);
-    // 4.
-    // Add an event listener to body, so that we can tell when to remove dragItem
     document.body.addEventListener("pointerup", bodyPointerUp);
 
     setDragItem(item);
@@ -56,12 +52,6 @@ export const ItemView = ({ item }: { item: Item }) => {
       onPointerUp={onPointerUp}
       onPointerCancel={() => {
         console.log("onPointerCancel", item.name);
-
-        // 10.
-        // Preventing default by JavaScript didn't work.
-        // event.preventDefault() didn't work.
-        // event.nativeEvent.preventDefault() didn't work.
-        // They didn't work on either "touchmove" nor "pointermove"
       }}
       onPointerOut={() => console.log("onPointerOut", item.name)}
       onPointerLeave={() => console.log("onPointerLeave", item.name)}
