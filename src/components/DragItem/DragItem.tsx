@@ -10,14 +10,11 @@ export const DragItem = () => {
     left: `${dragItemCoords.x}px`,
   };
 
-  return dragItem
-    ? createPortal(
-        <div className="drag-item" style={style}>
-          {dragItem.name}
-        </div>,
-        document.body
-      )
-    : null;
+  // 23.
+  // First, I hid DragItem temporarily.
+  // This showed how DragItem is preventing event bubbling.
+  // At least there are some logs now, but not quite what we want.
+  return null;
 };
 
 interface IDragItemContext {

@@ -55,6 +55,14 @@ export const DragDataProvider = ({ children }: { children: JSX.Element }) => {
   // Should work, but it doesn't.
   // When dragging is in progress, logs are not as expected.
   useEffect(() => {
+    // 24.
+    // I added some logs here.
+    // We get conflicting calls from different Item components.
+    // It makes sense, dropping on item-2, is dropping out of item-1 and item-3.
+    // And all of them are trying to set shared context.
+    // Se, which one should we trust?
+    console.log(dragSource, dragOver, dragDestination);
+
     if (dragSource) {
       console.log("Started dragging:", dragSource.name);
     }
