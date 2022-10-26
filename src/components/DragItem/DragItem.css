@@ -10,6 +10,5 @@
   color: #000;
   /* 27. */
   /* It must be a bubbling issue because uncommenting the next two lines will fix the problem */
-  /* pointer-events: none; */
-  /* touch-action: none; */
+  pointer-events: none;
 }
