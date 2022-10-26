@@ -1,9 +1,22 @@
+import { RefObject } from "react";
 import { Coords, Item } from "../App/App";
 import { useDragItem } from "../DragItem/DragItem";
 import "./ItemView.css";
 
-export const ItemView = ({ item }: { item: Item }) => {
+export const ItemView = ({
+  item,
+  itemsViewRef,
+}: {
+  item: Item;
+  itemsViewRef: RefObject<HTMLDivElement>;
+}) => {
   const { setDragItem, setDragItemCoords } = useDragItem();
+
+  const preventDefault = (event: Event) => {
+    console.log("preventDefault");
+
+    event.preventDefault();
+  };
 
   const bodyPointerMove = (event: PointerEvent) => {
     console.log("bodyPointerMove");
@@ -19,12 +32,21 @@ export const ItemView = ({ item }: { item: Item }) => {
     document.body.removeEventListener("pointermove", bodyPointerMove);
     document.body.removeEventListener("pointerup", bodyPointerUp);
 
+    // 13.
+    // Remove event listener when we want to allow scrolling in touch devices again
+    itemsViewRef.current?.removeEventListener("touchmove", preventDefault);
+
     setDragItem(undefined);
     setDragItemCoords(undefined);
   };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerDown", item.name);
+
+    // 12.
+    // Only prevent default when pointerdown is triggered
+    // It's interesting that what should be prevented is 'touchmove', not 'pointermove'
+    itemsViewRef.current?.addEventListener("touchmove", preventDefault);
 
     // Tested it on:
     // Chrome desktop: works fine
