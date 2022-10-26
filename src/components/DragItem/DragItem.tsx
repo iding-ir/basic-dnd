@@ -10,14 +10,10 @@ export const DragItem = () => {
     left: `${dragItemCoords.x}px`,
   };
 
-  return dragItem
-    ? createPortal(
-        <div className="drag-item" style={style}>
-          {dragItem.name}
-        </div>,
-        document.body
-      )
-    : null;
+  // 8.
+  // Removed DragImage portal.
+  // It's not the DragImage stopping event bubbling.
+  return null;
 };
 
 interface IDragItemContext {
