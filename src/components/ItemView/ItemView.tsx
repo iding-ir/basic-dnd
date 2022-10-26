@@ -6,15 +6,23 @@ export const ItemView = ({ item }: { item: Item }) => {
   const { setDragItem, setDragItemCoords } = useDragItem();
 
   const bodyPointerMove = (event: PointerEvent) => {
+    console.log("bodyPointerMove");
+
     const coords: Coords = { x: event.clientX, y: event.clientY };
 
-    // 2.
-    // Coords will change as expected
-    // Drag image move as expected
-    // Drag image will not glitch between items
-    console.log("body", coords);
-
     setDragItemCoords(coords);
+  };
+
+  const bodyPointerUp = (event: PointerEvent) => {
+    console.log("bodyPointerUp");
+
+    // 5.
+    // Remove all body event listeners with body "pointerup"
+    document.body.removeEventListener("pointermove", bodyPointerMove);
+    document.body.removeEventListener("pointerup", bodyPointerUp);
+    // Also get unset DragItem
+    setDragItem(undefined);
+    setDragItemCoords(undefined);
   };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -22,6 +30,9 @@ export const ItemView = ({ item }: { item: Item }) => {
 
     const coords: Coords = { x: event.clientX, y: event.clientY };
     document.body.addEventListener("pointermove", bodyPointerMove);
+    // 4.
+    // Add an event listener to body, so that we can tell when to remove dragItem
+    document.body.addEventListener("pointerup", bodyPointerUp);
 
     setDragItem(item);
     setDragItemCoords(coords);
@@ -29,26 +40,10 @@ export const ItemView = ({ item }: { item: Item }) => {
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerMove", item.name);
-
-    const coords: Coords = { x: event.clientX, y: event.clientY };
-    // 1.
-    // Coords will not go further than Items
-    // Drag image will not go far enough to the bottom
-    // Drag image will also glitch between items
-    console.log("item", coords);
   };
 
   const onPointerUp = () => {
     console.log("onPointerUp", item.name);
-
-    // 3.
-    // Will need to remove event listener from document.body when pointer is up.
-    // But if we do it here, event listener will only be removed if user "pointerup" on an Item.
-    // We want this do happen everywhere.
-    document.body.removeEventListener("pointermove", bodyPointerMove);
-
-    setDragItem(undefined);
-    setDragItemCoords(undefined);
   };
 
   return (
