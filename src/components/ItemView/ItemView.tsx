@@ -88,6 +88,11 @@ export const ItemView = ({
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     console.log("onPointerMove", item.name);
 
+    // 25.
+    // This is not quite what we want.
+    // We're setting dragOver by simply moving pointer on an item, even before drag-and-drop starts.
+    // We can do "dragSource && setDragOver(item)" or add a "isDragAndDropInProgress".
+    // I'm going with the later.
     setDragOver(item);
   };
 
