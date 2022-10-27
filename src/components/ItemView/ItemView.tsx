@@ -1,8 +1,8 @@
 import { useRef, RefObject } from "react";
-import { LONG_PRESS_TIMEOUT } from "../../constants/constants";
 import { useDragData } from "../../hooks/useDragData/useDragData";
 import { useDragItem } from "../../hooks/useDragItem/useDragItem";
-import { Coords, Item } from "../../types/types";
+import { Data, DND } from "../../packages/react-easy-dnd/react-easy-dnd";
+import { Item } from "../../types/types";
 import "./ItemView.css";
 
 export const ItemView = ({
@@ -21,123 +21,73 @@ export const ItemView = ({
     setDragOver,
     setDragDestination,
   } = useDragData();
-  let longPressTimer: NodeJS.Timer;
 
-  const preventDefault = (event: Event) => {
-    console.log("preventDefault");
-
-    event.preventDefault();
+  const onEnter = (data: Data) => {
+    console.log("onEnter");
   };
 
-  const bodyPointerMove = (event: PointerEvent) => {
-    console.log("bodyPointerMove");
-
-    const coords: Coords = { x: event.clientX, y: event.clientY };
-
-    setDragItemCoords(coords);
+  const onDown = (data: Data) => {
+    console.log("onDown");
   };
 
-  const bodyPointerUp = (event: PointerEvent) => {
-    console.log("bodyPointerUp");
+  const onLongPress = (data: Data) => {
+    console.log("onLongPress");
 
-    document.body.removeEventListener("pointermove", bodyPointerMove);
-    document.body.removeEventListener("pointerup", bodyPointerUp);
+    setDragItem(data.item);
+    setDragItemCoords(data.coords);
+    setDragSource(data.item);
+  };
 
-    itemsViewRef.current?.removeEventListener("touchmove", preventDefault);
+  const onMove = (data: Data) => {
+    console.log("onMove");
+
+    setDragItemCoords(data.coords);
+  };
+
+  const onMoveItem = (data: Data) => {
+    console.log("onMoveItem");
+    console.log({ isDragAndDropInProgress });
+
+    isDragAndDropInProgress && setDragOver(data.item);
+  };
+
+  const onUp = (data: Data) => {
+    console.log("onUp");
 
     setDragItem(undefined);
     setDragItemCoords(undefined);
     setIsDragAndDropInProgress(false);
   };
 
-  const cancelLongPress = () => {
-    console.log("cancelLongPress");
+  const onUpItem = (data: Data) => {
+    console.log("onUpItem");
 
-    longPressTimer && clearTimeout(longPressTimer);
-
-    elementRef.current?.removeEventListener("pointerup", cancelLongPress);
-    elementRef.current?.removeEventListener("pointermove", cancelLongPress);
-    elementRef.current?.removeEventListener("pointercancel", cancelLongPress);
+    isDragAndDropInProgress && setDragDestination(data.item);
   };
 
-  const addLongPressCancelers = () => {
-    console.log("addLongPressCancelers");
-
-    elementRef.current?.addEventListener("pointerup", cancelLongPress);
-    elementRef.current?.addEventListener("pointermove", cancelLongPress);
-    elementRef.current?.addEventListener("pointercancel", cancelLongPress);
-  };
-
-  const waitForLongPress = (event: React.PointerEvent<HTMLDivElement>) => {
-    addLongPressCancelers();
-
-    longPressTimer = setTimeout(() => {
-      console.log("User has long pressed!");
-
-      document.body.addEventListener("pointermove", bodyPointerMove);
-      document.body.addEventListener("pointerup", bodyPointerUp);
-
-      const coords: Coords = { x: event.clientX, y: event.clientY };
-      setDragItem(item);
-      setDragItemCoords(coords);
-      setDragSource(item);
-
-      itemsViewRef.current?.addEventListener("touchmove", preventDefault);
-
-      cancelLongPress();
-    }, LONG_PRESS_TIMEOUT);
-  };
-
-  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    console.log("onPointerDown", item.name);
-
-    waitForLongPress(event);
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-  };
-
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    console.log("onPointerMove", item.name);
-
-    isDragAndDropInProgress && setDragOver(item);
-  };
-
-  const onPointerUp = () => {
-    console.log("onPointerUp", item.name);
-
-    isDragAndDropInProgress && setDragDestination(item);
-  };
-
-  const onPointerOverEnter = () => {
-    console.log("onPointerOverEnter", item.name);
-  };
-
-  const onPointerOutLeave = () => {
-    console.log("onPointerOutLeave", item.name);
+  const onLeave = (data: Data) => {
+    console.log("onLeave");
 
     setDragOver(undefined);
   };
 
-  const onPointerCancel = () => {
-    console.log("onPointerCancel", item.name);
-  };
-
   return (
-    <div
-      className="item-view"
-      ref={elementRef}
-      onPointerOver={onPointerOverEnter}
-      onPointerEnter={onPointerOverEnter}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerCancel}
-      onPointerOut={onPointerOutLeave}
-      onPointerLeave={onPointerOutLeave}
+    <DND
+      parentRef={itemsViewRef}
+      childrenRef={elementRef}
+      item={item}
+      onEnter={onEnter}
+      onDown={onDown}
+      onLongPress={onLongPress}
+      onMove={onMove}
+      onMoveItem={onMoveItem}
+      onUp={onUp}
+      onUpItem={onUpItem}
+      onLeave={onLeave}
     >
-      {item.name}
-    </div>
+      <div className="item-view" ref={elementRef}>
+        {item.name}
+      </div>
+    </DND>
   );
 };
